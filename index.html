@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SK Fisheries Map Suite</title>
+    <style>
+        :root {
+            --primary-dark: #1a4d3e;
+            --primary-main: #2d6a5c;
+            --primary-light: #3d8b73;
+            --primary-lighter: #5ba894;
+            --accent-brass: #b8860b;
+            --accent-gold: #d4a574;
+            --bg-light: #f0f5f3;
+            --bg-panel: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #4a4a4a;
+            --border-color: #d0d5d3;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'Georgia', 'Garamond', serif;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #f8faf9 100%);
+            color: var(--text-primary);
+        }
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-main) 60%, var(--primary-light) 100%);
+            color: white;
+            padding: 28px 20px 20px;
+            box-shadow: 0 4px 20px rgba(26, 77, 62, 0.25);
+        }
+        header h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: 0.5px; }
+        header p { margin: 0; font-size: 14px; opacity: 0.92; }
+        .shell {
+            max-width: 1600px;
+            width: 96%;
+            margin: 18px auto 28px;
+            padding: 0 16px;
+        }
+        .controls {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(26, 77, 62, 0.10);
+            padding: 14px 16px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .map-btn {
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .map-btn:hover { border-color: var(--primary-light); color: var(--primary-dark); box-shadow: 0 4px 12px rgba(26,77,62,0.12); }
+        .map-btn.active {
+            background: linear-gradient(135deg, var(--primary-main), var(--primary-light));
+            color: white;
+            border-color: var(--primary-main);
+            box-shadow: 0 8px 18px rgba(26,77,62,0.18);
+        }
+        .map-btn small { font-weight: 500; opacity: 0.9; }
+        .badge { background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 999px; font-size: 11px; }
+        .frame-shell {
+            margin-top: 14px;
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(26, 77, 62, 0.16);
+            overflow: hidden;
+            min-height: 760px;
+        }
+        iframe { width: 100%; height: 85vh; border: none; }
+        .footer {
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 12px 0 24px;
+        }
+        @media (max-width: 768px) {
+            iframe { height: 70vh; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎣 SK Fisheries Map Suite</h1>
+        <p>Unified gallery for Fish Atlas, Stocking Explorer, Species Density, and Catchable Trout Index maps.</p>
+    </header>
+
+    <div class="shell">
+        <div class="controls" id="map-switcher">
+            <button class="map-btn" data-src="fish_atlas.html">🐟 Fish Atlas <small class="badge">Plotly</small></button>
+            <button class="map-btn" data-src="species_diversity_heatmap.html">🌈 Species Density <small class="badge">Plotly</small></button>
+            <button class="map-btn" data-src="stocking_explorer.html">📅 Stocking Explorer <small class="badge">Plotly</small></button>
+            <button class="map-btn active" data-src="trout_index_explorer.html">🎯 Trout Index Explorer <small class="badge">Mapbox GL</small></button>
+        </div>
+
+        <div class="frame-shell">
+            <iframe id="map-frame" src="trout_index_explorer.html" title="Trout Index Explorer" loading="lazy"></iframe>
+        </div>
+
+        <div class="footer">
+            <div><strong>Basemaps:</strong> Modern Mapbox styles (Standard, Standard Satellite, Streets v12, Satellite Streets v12, Light v11, Dark v11)</div>
+            <div>All maps are built with shared styling for consistency. Each map remains fully interactive within the frame.</div>
+        </div>
+    </div>
+
+    <script>
+        const buttons = Array.from(document.querySelectorAll('#map-switcher .map-btn'));
+        const frame = document.getElementById('map-frame');
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                buttons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const src = btn.getAttribute('data-src');
+                frame.setAttribute('src', src);
+            });
+        });
+    </script>
+</body>
+</html>
